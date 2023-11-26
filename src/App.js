@@ -9,7 +9,7 @@ import ProductList from './components/ProductList';
 import CreateProduct from './CreateProduct';
 import Footer from './components/Footer';
 import { UserProvider } from './UserContext';
-import BulkUpload from './BulkUpload'; // Import BulkUpload component
+import BulkUpload from './BulkUpload'; 
 import './App.css';
 
 const App = () => {

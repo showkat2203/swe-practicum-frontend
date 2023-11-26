@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { UserContext } from './UserContext'; // Import UserContext
+import { UserContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
 import './CreateProduct.css'
 

@@ -12,8 +12,7 @@ const Home = () => {
     return (
       <div className="home-container">
         <Header />
-        {user && <UserMenu />} {/* UserMenu component for logged in users */}
-        {/* Additional content and components as needed */}
+        {user && <UserMenu />}
         <Footer />
       </div>
     );
