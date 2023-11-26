@@ -1,0 +1,106 @@
+/* Main Menu Styling */
+.main-menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #34495e;
+  display: flex;
+}
+
+.main-menu ul li {
+  position: relative;
+  margin-right: 10px;
+}
+
+.main-menu ul li div, .main-menu ul li button {
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  font-weight: bold;
+}
+
+.main-menu ul li:hover div, .main-menu ul li button:hover {
+  background-color: #1abc9c;
+  transform: translateY(-2px);
+}
+
+/* Submenu Styling */
+.submenu {
+  visibility: hidden; /* Initially hidden */
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background-color: #f9f9f9;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  min-width: 180px;
+  z-index: 1;
+  border-radius: 5px;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.main-menu ul li:hover .submenu {
+  visibility: visible; /* Display on hover */
+  opacity: 1;
+}
+
+.submenu button {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+}
+
+.submenu button:hover {
+  background-color: #f1f1f1;
+}
+
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+.footer {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  text-align: center;
+  padding: 10px;
+  margin-top: auto; /* Keep this to push the footer to the bottom */
+  width: 100%; /* Full width */
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-menu ul li {
+    display: block; /* Stack the menu items vertically on smaller screens */
+    width: 100%;
+  }
+
+  .main-menu ul li div, .main-menu ul li button {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  /* Additional responsive adjustments as needed */
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Make sure it fills at least the whole viewport height */
+  justify-content: space-between; /* This will push the footer to the bottom */
+}
+
+/* Rest of your CSS */
