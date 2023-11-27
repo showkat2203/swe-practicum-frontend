@@ -15,7 +15,7 @@ const UserMenu = () => {
     return (
         <div className="user-menu" style={{ position: 'absolute', top: 0, right: 0, margin: '10px' }}>
             <div onClick={() => setShowMenu(!showMenu)}>
-                {user.name} {/* Displaying user's name */}
+                {user.name}
             </div>
             {showMenu && (
                 <div className="submenu" style={{ position: 'absolute', right: 0, backgroundColor: 'white', boxShadow: '0px 0px 5px #aaa', padding: '5px' }}>

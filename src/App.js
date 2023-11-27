@@ -5,12 +5,13 @@ import Register from './Register';
 import Home from './Home';
 import Header from './components/Header';
 import MainMenu from './components/MainMenu';
-import ProductList from './components/ProductList';
 import CreateProduct from './CreateProduct';
 import Footer from './components/Footer';
 import { UserProvider } from './UserContext';
 import BulkUpload from './BulkUpload'; 
 import './App.css';
+import CategoriesProducts from './CategoriesProducts';
+
 
 const App = () => {
   return (
@@ -26,9 +27,8 @@ const App = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/products/create" element={<CreateProduct />} /> 
           <Route path="/bulk-upload" element={<BulkUpload />} />
+          <Route path="/categories-products" element={<CategoriesProducts />} />
 
-
-          {/* Other routes */}
         </Routes>
         <Footer />
         </div>

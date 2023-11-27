@@ -15,14 +15,14 @@ const MainMenu = () => {
           <div>Products</div>
           <div className="submenu">
             <button onClick={() => handleNavigation('/products/create')}>Add Product</button>
-            <button onClick={() => handleNavigation('/products')}>View Products</button>
+            <button onClick={() => handleNavigation('/categories-products')}>View Products</button>
           </div>
         </li>
         <li className="menu-item">
           <div>Categories</div>
           <div className="submenu">
             <button onClick={() => handleNavigation('/categories/create')}>Add Category</button>
-            <button onClick={() => handleNavigation('/categories')}>View Categories</button>
+            <button onClick={() => handleNavigation('/categories-product')}>View Categories</button>
           </div>
         </li>
         <li>
