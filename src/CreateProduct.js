@@ -9,17 +9,16 @@ const CreateProduct = () => {
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
   const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(new Map());
+  const [showDropdown, setShowDropdown] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    // Redirect to login page if user is not logged in
     if (!user || !user.userId) {
       navigate('/login');
       return;
     }
 
-    // Fetch categories
     const fetchCategories = async () => {
       try {
         const response = await fetch('http://localhost:8080/categories');
@@ -37,32 +36,38 @@ const CreateProduct = () => {
     fetchCategories();
   }, [navigate, user]);
 
+  const handleCategoryChange = (categoryId, categoryName) => {
+    const newSelectedCategories = new Map(selectedCategories);
+    if (categoryId === '') {
+      newSelectedCategories.clear();
+    } else {
+      if (newSelectedCategories.size < 3 || newSelectedCategories.has(categoryId)) {
+        newSelectedCategories.has(categoryId) ? newSelectedCategories.delete(categoryId) : newSelectedCategories.set(categoryId, categoryName);
+      } else {
+        alert('You can only select up to 3 categories.');
+        return;
+      }
+    }
+    setSelectedCategories(newSelectedCategories);
+  };
+
+  const renderSelectedCategoryNames = () => {
+    return Array.from(selectedCategories.values()).join(', ');
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
 
-    // Check for product name duplication
-    // Placeholder for duplication check API call
-    const isDuplicate = false;
-    if (isDuplicate) {
-      setError('Product name already exists.');
-      return;
-    }
+    const categoryIds = Array.from(selectedCategories.keys());
 
-    // Limit category selection to 3
-    if (selectedCategories.length > 3) {
-      setError('You can only link up to 3 categories.');
-      return;
-    }
-
-    // Create product
     try {
       const productData = {
         userId: user.userId,
         productName,
         description
       };
-      // Replace with actual API call
+
       const createResponse = await fetch('http://localhost:8080/products/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -77,13 +82,12 @@ const CreateProduct = () => {
 
       const createdProduct = await createResponse.json();
 
-      // Link product to categories if any
-      if (selectedCategories.length) {
+      if (categoryIds.length) {
         const linkData = {
           productId: createdProduct.productId,
-          categoryIds: selectedCategories
+          categoryIds
         };
-        // Replace with actual API call
+
         await fetch('http://localhost:8080/products/link-categories', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -91,12 +95,13 @@ const CreateProduct = () => {
         });
       }
 
-      navigate('/'); // Redirect after successful creation
+      navigate('/');
     } catch (error) {
       setError('An error occurred while creating the product.');
     }
   };
 
+  
   return (
     <div className="create-product-container">
       <h2>Create Product</h2>
@@ -122,21 +127,21 @@ const CreateProduct = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="categories">Link to Categories (optional)</label>
-          <select 
-            id="categories" 
-            multiple 
-            value={selectedCategories}
-            onChange={(e) => setSelectedCategories([...e.target.selectedOptions].map(o => o.value))}
-            size="5"
-          >
-            <option value="">No Category</option>
-            {categories.map(category => (
-              <option key={category.categoryId} value={category.categoryId}>
-                {category.name || `Category ID: ${category.categoryId}`}
-              </option>
-            ))}
-          </select>
+          <label>Link to Categories (optional)</label>
+          <div className="custom-dropdown" onClick={() => setShowDropdown(!showDropdown)}>
+            <div className="dropdown-header">{selectedCategories.size === 0 ? 'No Category' : renderSelectedCategoryNames()}</div>
+            {showDropdown && (
+              <ul className="dropdown-list">
+                <li onClick={() => handleCategoryChange('', 'No Category')}>No Category</li>
+                {categories.map(category => (
+                  <li key={category.categoryId} onClick={() => handleCategoryChange(category.categoryId, category.name)}>
+                    {selectedCategories.has(category.categoryId) ? '✔ ' : ''}
+                    {category.name || `Category ID: ${category.categoryId}`}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
         <button type="submit" className="submit-btn">Create Product</button>
       </form>
