@@ -3,7 +3,7 @@ import './CategoriesProducts.css';
 
 const CategoriesProducts = () => {
   const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState(new Set());
+  const [selectedCategories, setSelectedCategories] = useState(new Set(['All']));
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortDirection, setSortDirection] = useState({ field: 'categoryName', direction: 'asc' });
@@ -48,7 +48,7 @@ const CategoriesProducts = () => {
         categoryName: category.name || `Category ID: ${category.categoryId}`
       })))
       .filter(product => 
-        (selectedCategories.size === 0 || selectedCategories.has('All') || selectedCategories.has(product.categoryName)) &&
+        (selectedCategories.has('All') || selectedCategories.has(product.categoryName)) &&
         product.productName.toLowerCase().includes(searchTerm.toLowerCase())
       )
       .sort((a, b) => {
