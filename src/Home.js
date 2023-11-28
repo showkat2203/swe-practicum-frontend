@@ -3,7 +3,6 @@ import { UserContext } from './UserContext';
 import UserMenu from './UserMenu';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import MainMenu from './components/MainMenu';
 import './App.css'
 
 const Home = () => {

@@ -1,0 +1,43 @@
+.category-list-container {
+    padding: 20px;
+  }
+  
+  .category-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .category-table th,
+  .category-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .category-table th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .category-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .category-table tr:hover {
+    background-color: #ddd;
+  }
+  
+  .edit-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .edit-btn:hover {
+    background-color: #218838;
+  }
+  

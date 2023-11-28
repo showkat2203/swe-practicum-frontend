@@ -12,17 +12,18 @@ const MainMenu = () => {
     <nav className="main-menu">
       <ul>
         <li className="menu-item">
-          <div>Products</div>
+          <div onClick={() => handleNavigation('/products')}>Products</div>
           <div className="submenu">
             <button onClick={() => handleNavigation('/products/create')}>Add Product</button>
             <button onClick={() => handleNavigation('/categories-products')}>View Products</button>
           </div>
         </li>
         <li className="menu-item">
-          <div>Categories</div>
+          <div onClick={() => handleNavigation('/categories')}>Categories</div>
           <div className="submenu">
             <button onClick={() => handleNavigation('/categories/create')}>Add Category</button>
-            <button onClick={() => handleNavigation('/categories-product')}>View Categories</button>
+            <button onClick={() => handleNavigation('/categories')}>View Categories</button>
+            <button onClick={() => handleNavigation('/categories-products')}>View Products with Categories</button>
           </div>
         </li>
         <li>
