@@ -110,3 +110,22 @@
   0%, 80% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+
+.selected-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.selected-category {
+  background-color: #ecf0f1;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.remove-category {
+  margin-left: 5px;
+  color: red;
+  cursor: pointer;
+}

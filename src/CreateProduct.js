@@ -51,9 +51,31 @@ const CreateProduct = () => {
     setSelectedCategories(newSelectedCategories);
   };
 
+  // const renderSelectedCategoryNames = () => {
+  //   return Array.from(selectedCategories.entries())
+  //     .map(([key, value]) => value || `Category ID: ${key}`)
+  //     .join(', ');
+  // }
+
   const renderSelectedCategoryNames = () => {
-    return Array.from(selectedCategories.values()).join(', ');
+    return (
+      <div className="selected-categories">
+        {Array.from(selectedCategories.entries()).map(([key, value]) => (
+          <span key={key} className="selected-category">
+            {value || `Category ID: ${key}`}
+            <span 
+              className="remove-category"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevents triggering the dropdown
+                handleCategoryChange(key, value);
+              }}
+            > ✖</span>
+          </span>
+        ))}
+      </div>
+    );
   };
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -101,7 +123,7 @@ const CreateProduct = () => {
     }
   };
 
-  
+
   return (
     <div className="create-product-container">
       <h2>Create Product</h2>
@@ -129,7 +151,12 @@ const CreateProduct = () => {
         <div className="form-group">
           <label>Link to Categories (optional)</label>
           <div className="custom-dropdown" onClick={() => setShowDropdown(!showDropdown)}>
-            <div className="dropdown-header">{selectedCategories.size === 0 ? 'No Category' : renderSelectedCategoryNames()}</div>
+            {/* <div className="dropdown-header">{selectedCategories.size === 0 ? 'No Category' : renderSelectedCategoryNames()}</div> */}
+
+            <div className="dropdown-header" onClick={() => setShowDropdown(!showDropdown)}>
+                {selectedCategories.size === 0 ? 'No Category' : renderSelectedCategoryNames()}
+            </div>
+            
             {showDropdown && (
               <ul className="dropdown-list">
                 <li onClick={() => handleCategoryChange('', 'No Category')}>No Category</li>
