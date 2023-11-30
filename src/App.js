@@ -41,16 +41,16 @@ const App = () => {
           <Route path="" element={<Login/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
-          {userId && (
-            <>
+          {/* {userId && ( */}
+            {/* <> */}
               <Route path="/products" element={<ProductList />} />
               <Route path="/products/create" element={<CreateProduct />} />
               <Route path="/bulk-upload" element={<BulkUpload />} />
               <Route path="/categories" element={<CategoryList />} />
               <Route path="/categories-products" element={<CategoriesProducts />} />
               <Route path="/categories/create" element={<CreateCategory />} />
-            </>
-          )}
+            {/* </> */}
+          {/* )} */}
         </Routes>
         <Footer />
       </div>

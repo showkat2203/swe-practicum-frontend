@@ -32,7 +32,7 @@ const BulkUpload = () => {
         if (response.ok) {
           console.log('File uploaded successfully');
           setUploadSuccess(true); 
-          setTimeout(() => navigate('/'), 3000);
+          setTimeout(() => navigate('/products'), 2000);
         } else {
           console.error('Upload failed');
         }
