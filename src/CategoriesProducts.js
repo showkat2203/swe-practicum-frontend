@@ -14,9 +14,9 @@ const CategoriesProducts = () => {
 
   useEffect(() => {
 
-    // const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('userId');
     if (!userId) {
-      navigate('/login');
+      navigate('');
       return;
     }
 

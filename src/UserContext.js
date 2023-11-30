@@ -1,9 +1,21 @@
-import React, { createContext, useState } from 'react';
+// UserContext.js
+import React, { createContext, useState, useEffect } from 'react';
 
-export const UserContext = createContext(null);
+export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(localStorage.getItem('userId'));
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUserId(localStorage.getItem('userId'));
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   return (
     <UserContext.Provider value={{ userId, setUserId }}>

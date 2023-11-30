@@ -19,7 +19,7 @@ const Register = () => {
         try {
             const response = await axios.post('http://localhost:8080/register', { email, password, name });
             console.log('Registration successful:', response.data);
-            navigate('/products', { state: { fromRegistration: true } }); // Redirect with state
+            navigate('/', { state: { fromRegistration: true } }); // Redirect with state
         } catch (err) {
             setError(err.response?.data || 'Registration failed');
         }

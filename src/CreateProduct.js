@@ -14,7 +14,7 @@ const CreateProduct = () => {
   useEffect(() => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      navigate('/login');
+      navigate('/');
       return;
     }
 

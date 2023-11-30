@@ -37,6 +37,7 @@ const BulkUpload = () => {
           console.error('Upload failed');
         }
       } catch (error) {
+        alert('The File Format is not correct.');
         console.error('Error during upload:', error);
       }
     } else {

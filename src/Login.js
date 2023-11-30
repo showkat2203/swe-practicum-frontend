@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; 
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Auth.css'; 
+import { UserContext } from './UserContext'; 
+
+
 
 const Login = () => {
     const location = useLocation();
     const [showSuccess, setShowSuccess] = useState(false);
+    const { setUserId } = useContext(UserContext); // Use UserContext
+
 
 
 
@@ -32,6 +37,7 @@ const Login = () => {
         try {
           const response = await axios.post('http://localhost:8080/login', { email, password });
           console.log('Login successful:', response.data);
+          setUserId(response.data.userId); // Update userId in context
           localStorage.setItem('userId', response.data.userId);
           navigate('/categories-products');
         } catch (err) {

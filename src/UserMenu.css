@@ -1,41 +1,58 @@
 .custom-user-menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 10px;
-    cursor: pointer;
-}
-
-.custom-user-menu .menu-title {
+    position: fixed;
+    top: 10px;
+    right: 10px;
     background-color: #f8f8f8;
-    padding: 5px 10px;
-    border: 1px solid #ddd;
+    padding: 8px 16px;
     border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; 
+    font-family: Arial, sans-serif;
 }
 
-.custom-user-menu:hover .custom-submenu {
-    display: block; /* Show on hover */
+.menu-title {
+    cursor: pointer;
+    color: #333;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.arrow-down {
+    display: inline-block;
+    margin-left: 8px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
 }
 
 .custom-submenu {
-    display: none; /* Hide by default */
+    display: none;
     position: absolute;
-    right: 0;
-    background-color: white;
-    box-shadow: 0px 0px 5px #aaa;
-    padding: 5px;
-    margin-top: 5px;
+    top: 100%;
+    left: 0;
+    background-color: #ffffff;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     border-radius: 4px;
-    z-index: 1000;
+    overflow: hidden;
+    z-index: 1;
+    margin-top: 5px;
+}
+
+.custom-user-menu:hover .custom-submenu {
+    display: block;
 }
 
 .custom-submenu a {
-    color: #555;
+    padding: 10px 15px;
     text-decoration: none;
     display: block;
-    padding: 5px 10px;
+    color: #333333;
+    font-size: 14px;
 }
 
 .custom-submenu a:hover {
-    background-color: #eee;
+    background-color: #f1f1f1;
 }
