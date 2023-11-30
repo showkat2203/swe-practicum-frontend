@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from './UserContext';
 import './Auth.css'; 
 
 const Login = () => {
     const location = useLocation();
     const [showSuccess, setShowSuccess] = useState(false);
-    const { setUser } = useContext(UserContext);
+
 
 
     useEffect(() => {
@@ -34,12 +32,12 @@ const Login = () => {
         try {
           const response = await axios.post('http://localhost:8080/login', { email, password });
           console.log('Login successful:', response.data);
-          setUser(response.data); // Set the user in context
-          navigate('/home');
+          localStorage.setItem('userId', response.data.userId);
+          navigate('/categories-products');
         } catch (err) {
           setError(err.response?.data || 'Login failed');
         }
-      };
+    };
 
     return (
         <div className="auth-container">

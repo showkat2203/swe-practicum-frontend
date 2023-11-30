@@ -15,7 +15,7 @@ const MainMenu = () => {
           <div onClick={() => handleNavigation('/products')}>Products</div>
           <div className="submenu">
             <button onClick={() => handleNavigation('/products/create')}>Add Product</button>
-            <button onClick={() => handleNavigation('/categories-products')}>View Products</button>
+            <button onClick={() => handleNavigation('/products')}>View Products</button>
           </div>
         </li>
         <li className="menu-item">

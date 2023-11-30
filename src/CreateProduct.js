@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from './UserContext';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateProduct.css';
 
 const CreateProduct = () => {
-  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
@@ -14,7 +12,8 @@ const CreateProduct = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!user || !user.userId) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
       navigate('/login');
       return;
     }
@@ -34,7 +33,7 @@ const CreateProduct = () => {
     };
 
     fetchCategories();
-  }, [navigate, user]);
+  }, [navigate]);
 
   const handleCategoryChange = (categoryId, categoryName) => {
     const newSelectedCategories = new Map(selectedCategories);
@@ -50,12 +49,6 @@ const CreateProduct = () => {
     }
     setSelectedCategories(newSelectedCategories);
   };
-
-  // const renderSelectedCategoryNames = () => {
-  //   return Array.from(selectedCategories.entries())
-  //     .map(([key, value]) => value || `Category ID: ${key}`)
-  //     .join(', ');
-  // }
 
   const renderSelectedCategoryNames = () => {
     return (
@@ -75,17 +68,17 @@ const CreateProduct = () => {
       </div>
     );
   };
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
 
+    const userId = localStorage.getItem('userId');
     const categoryIds = Array.from(selectedCategories.keys());
 
     try {
       const productData = {
-        userId: user.userId,
+        userId: userId,
         productName,
         description
       };
@@ -117,12 +110,11 @@ const CreateProduct = () => {
         });
       }
 
-      navigate('/');
+      navigate('/products');
     } catch (error) {
       setError('An error occurred while creating the product.');
     }
   };
-
 
   return (
     <div className="create-product-container">
@@ -151,8 +143,6 @@ const CreateProduct = () => {
         <div className="form-group">
           <label>Link to Categories (optional)</label>
           <div className="custom-dropdown" onClick={() => setShowDropdown(!showDropdown)}>
-            {/* <div className="dropdown-header">{selectedCategories.size === 0 ? 'No Category' : renderSelectedCategoryNames()}</div> */}
-
             <div className="dropdown-header" onClick={() => setShowDropdown(!showDropdown)}>
                 {selectedCategories.size === 0 ? 'No Category' : renderSelectedCategoryNames()}
             </div>

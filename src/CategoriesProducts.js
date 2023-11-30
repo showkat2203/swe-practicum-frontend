@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './CategoriesProducts.css';
 
 const CategoriesProducts = () => {
+  const [userId, setUserId] = useState(localStorage.getItem('id'));
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState(new Set(['All']));
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,6 +13,13 @@ const CategoriesProducts = () => {
   const productsPerPage = 20;
 
   useEffect(() => {
+
+    // const userId = localStorage.getItem('userId');
+    if (!userId) {
+      navigate('/login');
+      return;
+    }
+
     const fetchCategories = async () => {
       try {
         const response = await fetch('http://localhost:8080/products/categories');
@@ -23,8 +33,9 @@ const CategoriesProducts = () => {
         console.error('Error fetching categories:', error);
       }
     };
+
     fetchCategories();
-  }, []);
+  }, [navigate]);
 
   const handleCategoryChange = (e) => {
     const selectedOptions = new Set([...e.target.selectedOptions].map(option => option.value));
@@ -68,6 +79,10 @@ const CategoriesProducts = () => {
     setCurrentPage(pageNumber);
   };
 
+
+  let lastCategory = null;
+
+
   return (
     <div className="categories-products-container">
       <h2>Products Grouped by Categories</h2>
@@ -99,13 +114,25 @@ const CategoriesProducts = () => {
           </tr>
         </thead>
         <tbody>
-          {currentProducts.map((product, index) => (
-            <tr key={index}>
-              <td>{product.categoryName}</td>
-              <td>{product.productName}</td>
-              <td>{product.description}</td>
-            </tr>
-          ))}
+          {currentProducts.map((product, index) => {
+            const isDifferentCategory = lastCategory !== product.categoryName;
+            lastCategory = product.categoryName; 
+
+            return (
+              <React.Fragment key={index}>
+               {isDifferentCategory && (
+                  <tr className="category-separator">
+                    <td colSpan="3">{product.categoryName}</td> 
+                  </tr>
+                )}
+                <tr>
+                  <td>{product.categoryName}</td>
+                  <td>{product.productName}</td>
+                  <td>{product.description}</td>
+                </tr>
+              </React.Fragment>
+            );
+          })}
         </tbody>
       </table>
       <Pagination 

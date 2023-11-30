@@ -11,7 +11,7 @@ const Register = () => {
     const [error, setError] = useState('');
 
     const handleNavigateToLogin = () => {
-        navigate('/login');
+        navigate('/');
     };
 
     const handleSubmit = async (event) => {

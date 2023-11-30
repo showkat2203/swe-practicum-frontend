@@ -96,3 +96,15 @@ tr:nth-child(even) {
         width: 100%;
     }
 }
+
+
+.category-separator {
+    background-color: #f0f0f0; 
+    font-weight: bold; 
+}
+
+.category-separator td {
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    text-align: center; 
+}
