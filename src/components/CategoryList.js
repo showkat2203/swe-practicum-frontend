@@ -6,6 +6,8 @@ const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editableCategory, setEditableCategory] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
 
   useEffect(() => {
     fetchCategories();
@@ -26,6 +28,24 @@ const CategoryList = () => {
   const openEditModal = (category) => {
     setEditableCategory(category);
     setIsModalOpen(true);
+  };
+
+  const openDeleteModal = (categoryId) => {
+    setCategoryToDelete(categoryId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/categories/delete/${categoryToDelete}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) throw new Error('Failed to delete the category.');
+      setIsDeleteModalOpen(false);
+      fetchCategories(); // Refresh categories list after deletion
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    }
   };
 
   const closeModal = () => {
@@ -51,6 +71,7 @@ const CategoryList = () => {
               <td>{category.description || 'No Description'}</td>
               <td>
                 <button onClick={() => openEditModal(category)}>Edit</button>
+                <button onClick={() => openDeleteModal(category.categoryId)}>Delete</button>
               </td>
             </tr>
           ))}
@@ -62,6 +83,17 @@ const CategoryList = () => {
           onClose={closeModal}
           onActionComplete={fetchCategories}
         />
+      )}
+      {isDeleteModalOpen && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <span className="close-modal-button" onClick={() => setIsDeleteModalOpen(false)}>✖</span>
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete this category?</p>
+            <button onClick={handleDeleteConfirm}>Delete</button>
+            <button onClick={() => setIsDeleteModalOpen(false)}>Cancel</button>
+          </div>
+        </div>
       )}
     </div>
   );

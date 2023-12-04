@@ -6,6 +6,7 @@ const CreateCategory = ({ categoryData, onClose, onActionComplete }) => {
   const [categoryName, setCategoryName] = useState('');
   const [categoryDescription, setCategoryDescription] = useState('');
   const [error, setError] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const navigate = useNavigate(); // Create navigate instance
 
 
@@ -40,7 +41,10 @@ const CreateCategory = ({ categoryData, onClose, onActionComplete }) => {
         if (onActionComplete) onActionComplete(); // Refresh categories list (only for edit mode)
         if (onClose) onClose(); // Close modal (only for edit mode)
 
-        navigate('/categories');
+        setShowSuccessMessage(true);
+        setTimeout(() => {
+          navigate('/categories');
+        }, 2000); // Redirect after 2 seconds
       }
     } catch (error) {
       setError(`An error occurred while ${categoryData ? 'updating' : 'creating'} the category`);
@@ -55,6 +59,7 @@ const CreateCategory = ({ categoryData, onClose, onActionComplete }) => {
       {isEditMode && <span className="close-modal-button" onClick={onClose}>✖</span>}
       <div className="create-category-container">
         <h2>{isEditMode ? 'Edit Category' : 'Create Category'}</h2>
+        {showSuccessMessage && <div className="success-message">Category {isEditMode ? 'updated' : 'created'} successfully!</div>}
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -78,6 +83,8 @@ const CreateCategory = ({ categoryData, onClose, onActionComplete }) => {
           <button type="submit" className="submit-btn">
             {isEditMode ? 'Update Category' : 'Create Category'}
           </button>
+          {isEditMode && <button className="close-btn" onClick={onClose}>Close</button>}
+
         </form>
       </div>
     </div>

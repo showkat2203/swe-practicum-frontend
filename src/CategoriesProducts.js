@@ -88,20 +88,6 @@ const CategoriesProducts = () => {
     fetchCategories();
   }, [navigate, deleteCounter]);
 
-  // const handleDelete = async (productId) => {
-  //   if (window.confirm("Are you sure you want to delete this product?")) {
-  //     try {
-  //       const response = await fetch(`http://localhost:8080/products/delete/${productId}`, {
-  //         method: 'DELETE'
-  //       });
-  //       if (!response.ok) throw new Error('Failed to delete the product.');
-  //     } catch (error) {
-  //       console.error('Error deleting product:', error);
-  //     }
-  //   }
-  // };
-
-
   const handleCategoryChange = (e) => {
     const selectedOptions = new Set([...e.target.selectedOptions].map(option => option.value));
     setSelectedCategories(selectedOptions);
