@@ -4,6 +4,7 @@ import './CategoryList.css';
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editableCategory, setEditableCategory] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -24,6 +25,19 @@ const CategoryList = () => {
       console.error('Failed to fetch categories:', error);
     }
   };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
+
+  const filteredCategories = categories.filter(category => {
+    const name = category.name ? category.name.toLowerCase() : `Category ID: ${category.categoryId}`;
+    const description = category.description ? category.description.toLowerCase() : '';
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  
+    return name.includes(lowerCaseSearchTerm) || description.includes(lowerCaseSearchTerm);
+  });
+  
 
   const openEditModal = (category) => {
     setEditableCategory(category);
@@ -56,6 +70,12 @@ const CategoryList = () => {
 
   return (
     <div className="category-list-container">
+      <input 
+        type="text" 
+        placeholder="Search by name or description..." 
+        onChange={handleSearchChange} 
+        className="search-input"
+      />
       <table className="category-table">
         <thead>
           <tr>
@@ -65,7 +85,7 @@ const CategoryList = () => {
           </tr>
         </thead>
         <tbody>
-          {categories.map(category => (
+          {filteredCategories.map(category => (
             <tr key={category.categoryId}>
               <td>{category.name || `Category ID: ${category.categoryId}`}</td>
               <td>{category.description || 'No Description'}</td>
