@@ -122,7 +122,12 @@ const CreateProduct = ({ closeModal, productData }) => {
             });
         }
 
-        if (!productResponse.ok) throw new Error('Product processing failed');
+        // if (!productResponse.ok) throw new Error('Product processing failed');
+
+        if (!productResponse.ok) {
+          const errorMsg = await productResponse.text(); 
+          throw new Error(errorMsg || 'Product processing failed');
+      }
 
         const productResult = await productResponse.json();
         const productId = productResult.productId;

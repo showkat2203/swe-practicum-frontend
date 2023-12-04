@@ -4,6 +4,8 @@ import './CategoriesProducts.css';
 import CreateProduct from './CreateProduct';
 
 
+
+
 const CategoriesProducts = () => {
   const [userId, setUserId] = useState(localStorage.getItem('id'));
   const navigate = useNavigate();
@@ -17,6 +19,35 @@ const CategoriesProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editableProduct, setEditableProduct] = useState(null);
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [deleteCounter, setDeleteCounter] = useState(0); // Counter for deletions
+
+
+
+  const handleDeleteClick = (productId) => {
+    setProductToDelete(productId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setProductToDelete(null);
+  };
+
+  const handleDeleteConfirm = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/products/delete/${productId}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) throw new Error('Failed to delete the product.');
+      setDeleteCounter(prev => prev + 1); // Increment the delete counter
+      closeDeleteModal();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
+
   const handleView = (productId) => {
     // Logic to view product details
   };
@@ -26,10 +57,7 @@ const CategoriesProducts = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (productId) => {
-    // Logic to delete product
-  };
-
+  
   const closeModal = () => {
     setIsModalOpen(false);
     setEditableProduct(null);
@@ -58,7 +86,21 @@ const CategoriesProducts = () => {
     };
 
     fetchCategories();
-  }, [navigate]);
+  }, [navigate, deleteCounter]);
+
+  // const handleDelete = async (productId) => {
+  //   if (window.confirm("Are you sure you want to delete this product?")) {
+  //     try {
+  //       const response = await fetch(`http://localhost:8080/products/delete/${productId}`, {
+  //         method: 'DELETE'
+  //       });
+  //       if (!response.ok) throw new Error('Failed to delete the product.');
+  //     } catch (error) {
+  //       console.error('Error deleting product:', error);
+  //     }
+  //   }
+  // };
+
 
   const handleCategoryChange = (e) => {
     const selectedOptions = new Set([...e.target.selectedOptions].map(option => option.value));
@@ -157,7 +199,7 @@ const CategoriesProducts = () => {
                   <td>
                     <button onClick={() => handleView(product.productId)}>View</button>
                     <button onClick={() => handleEdit(product)}>Edit</button>
-                    <button onClick={() => handleDelete(product.productId)}>Delete</button>
+                    <button onClick={() => handleDeleteClick(product.productId)}>Delete</button>
                 </td>
                 </tr>
               </React.Fragment>
@@ -189,9 +231,34 @@ const CategoriesProducts = () => {
         </div>
       )}
 
+      <DeleteConfirmationModal 
+          isOpen={isDeleteModalOpen} 
+          onClose={closeDeleteModal}
+          onConfirm={handleDeleteConfirm} 
+          productId={productToDelete}
+        />
+
     </div>
   );
 };
+
+
+const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, productId }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-backdrop">
+      <div className="modal-content">
+        <span className="close-modal-button" onClick={onClose}>✖</span>
+        <h3>Confirm Deletion</h3>
+        <p>Are you sure you want to delete this product?</p>
+        <button onClick={() => onConfirm(productId)}>Delete</button>
+        <button onClick={onClose}>Cancel</button>
+      </div>
+    </div>
+  );
+};
+
 
 const Pagination = ({ productsPerPage, totalProducts, paginate }) => {
   const pageNumbers = [];
