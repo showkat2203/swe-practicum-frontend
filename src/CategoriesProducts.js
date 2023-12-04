@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CategoriesProducts.css';
+import CreateProduct from './CreateProduct';
+
 
 const CategoriesProducts = () => {
   const [userId, setUserId] = useState(localStorage.getItem('id'));
@@ -11,6 +13,27 @@ const CategoriesProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortDirection, setSortDirection] = useState({ field: 'categoryName', direction: 'asc' });
   const productsPerPage = 20;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editableProduct, setEditableProduct] = useState(null);
+
+  const handleView = (productId) => {
+    // Logic to view product details
+  };
+
+  const handleEdit = (product) => {
+    setEditableProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = (productId) => {
+    // Logic to delete product
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditableProduct(null);
+  };
 
   useEffect(() => {
 
@@ -111,6 +134,8 @@ const CategoriesProducts = () => {
               Product Name{getSortIndicator('productName')}
             </th>
             <th>Description</th>
+            <th>Action</th>
+
           </tr>
         </thead>
         <tbody>
@@ -129,6 +154,11 @@ const CategoriesProducts = () => {
                   <td>{product.categoryName}</td>
                   <td>{product.productName}</td>
                   <td>{product.description}</td>
+                  <td>
+                    <button onClick={() => handleView(product.productId)}>View</button>
+                    <button onClick={() => handleEdit(product)}>Edit</button>
+                    <button onClick={() => handleDelete(product.productId)}>Delete</button>
+                </td>
                 </tr>
               </React.Fragment>
             );
@@ -140,6 +170,25 @@ const CategoriesProducts = () => {
         totalProducts={filteredAndSortedProducts.length} 
         paginate={paginate}
       />
+      {/* {isModalOpen && (
+        <CreateProduct
+          closeModal={closeModal}
+          productData={editableProduct}
+        />
+      )} */}
+
+    {isModalOpen && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <span className="close-modal-button" onClick={closeModal}>✖</span>
+            <CreateProduct
+              closeModal={closeModal}
+              productData={editableProduct}
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

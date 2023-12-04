@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateProduct.css';
 
-const CreateProduct = () => {
+const CreateProduct = ({ closeModal, productData }) => {
   const navigate = useNavigate();
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
@@ -18,22 +18,45 @@ const CreateProduct = () => {
       return;
     }
 
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/categories');
-        if (response.ok) {
-          const data = await response.json();
-          setCategories(data);
-        } else {
-          console.error('Failed to fetch categories');
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
+    if (productData) {
+      setProductName(productData.productName);
+      setDescription(productData.description);
+      // Preload saved categories for the product
+      fetchSavedCategories(productData.productId);
+    }
 
     fetchCategories();
-  }, [navigate]);
+  }, [navigate, productData]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/categories');
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+      } else {
+        console.error('Failed to fetch categories');
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchSavedCategories = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/products/${productId}/categories`);
+      if (response.ok) {
+        const savedCategories = await response.json();
+        const categoriesMap = new Map();
+        savedCategories.forEach(category => {
+          categoriesMap.set(category.categoryId, category.name);
+        });
+        setSelectedCategories(categoriesMap);
+      }
+    } catch (error) {
+      console.error('Error fetching saved categories:', error);
+    }
+  };
 
   const handleCategoryChange = (categoryId, categoryName) => {
     const newSelectedCategories = new Map(selectedCategories);
@@ -68,53 +91,61 @@ const CreateProduct = () => {
       </div>
     );
   };
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
 
     const userId = localStorage.getItem('userId');
     const categoryIds = Array.from(selectedCategories.keys());
+    let productResponse, linkResponse;
 
-    try {
-      const productData = {
+    // Prepare product data payload
+    const productDataPayload = {
         userId: userId,
         productName,
         description
-      };
+    };
 
-      const createResponse = await fetch('http://localhost:8080/products/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productData)
-      });
+    try {
+        if (productData && productData.productId) { // Update existing product
+            productResponse = await fetch(`http://localhost:8080/products/${productData.productId}/edit`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productDataPayload)
+            });
+        } else { // Create new product
+            productResponse = await fetch('http://localhost:8080/products/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productDataPayload)
+            });
+        }
 
-      if (!createResponse.ok) {
-        const errorMsg = await createResponse.text();
-        setError(errorMsg);
-        return;
-      }
+        if (!productResponse.ok) throw new Error('Product processing failed');
 
-      const createdProduct = await createResponse.json();
+        const productResult = await productResponse.json();
+        const productId = productResult.productId;
 
-      if (categoryIds.length) {
-        const linkData = {
-          productId: createdProduct.productId,
-          categoryIds
-        };
+        // Link categories to the product
+        if (categoryIds.length) {
+            const linkData = { productId, categoryIds };
+            linkResponse = await fetch('http://localhost:8080/products/link-categories', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(linkData)
+            });
 
-        await fetch('http://localhost:8080/products/link-categories', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(linkData)
-        });
-      }
+            if (!linkResponse.ok) throw new Error('Category linking failed');
+        }
 
-      navigate('/products');
+        // closeModal(); // Close modal on success
+        navigate('/products');
     } catch (error) {
-      setError('An error occurred while creating the product.');
+        setError('An error occurred: ' + error.message);
     }
-  };
+};
+
 
   return (
     <div className="create-product-container">
@@ -160,8 +191,14 @@ const CreateProduct = () => {
             )}
           </div>
         </div>
-        <button type="submit" className="submit-btn">Create Product</button>
+        {/* <button type="submit" className="submit-btn">Create Product</button>
+         */}
+         <button type="submit" className="submit-btn">
+          {productData ? 'Update Product' : 'Create Product'}
+        </button>
       </form>
+      <button onClick={closeModal}>Close</button>
+
     </div>
   );
 };
